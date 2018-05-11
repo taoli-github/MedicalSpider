@@ -23,7 +23,7 @@ def main():
 
 def data_import():
     sql = 'insert into spider_disease_list VALUES ' \
-          '(seq_spider_disease_id.nextval, :name, :url, :flag)'
+          '(seq_spider_disease_id.nextval, :name, :url, :flag, 1)'
     param_dict = []
     for d_name in disease_dict:
         param_dict.append((d_name, 'http://brain.kangfuzi.com/jibing/'+req.quote(d_name), '0'))

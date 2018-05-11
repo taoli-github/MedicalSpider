@@ -38,6 +38,7 @@ class OracleHelper:
                 result = self.__cursor.execute(sql, params)
         except cx_Oracle.DatabaseError as err:
             self.__db.rollback()
+            print(sql, params)
             raise err
 
         self.__db.commit()
