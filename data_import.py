@@ -14,6 +14,7 @@ def main():
         dic = csv.DictReader(f)
         global disease_dict
         disease_dict = [x['DISEASE'] for x in dic]
+        print(disease_dict)
     try:
         data_import()
         print('import success')
@@ -22,24 +23,29 @@ def main():
 
 
 def data_import():
-    sql = 'insert into spider_disease_list VALUES ' \
-          '(seq_spider_disease_id.nextval, :name, :url, :flag, 1)'
-    param_dict = []
+    """ url 疾病列表导入 """
+    pre_sql = 'select count(1) as cou from spider_disease_list where DISEASE_NAME = :d_name '
+    sql = 'insert into spider_disease_list (ID, DISEASE_NAME, SIPIDER_URL, FLAG_DONE) VALUES ' \
+          '(seq_spider_disease_id.nextval, :name, :url, :flag)'
+    # param_dict = []
     for d_name in disease_dict:
-        param_dict.append((d_name, 'http://brain.kangfuzi.com/jibing/'+req.quote(d_name), '0'))
+        pre_param = {'d_name': d_name}
+        data_param = {'name': d_name, 'url': '', 'flag': '0'}
 
-    with helper.OracleHelper() as f:
-        # 1. 每次导入一行
-        # for d_name in disease_dict:
-        #     str_sql = 'insert into spider_disease_list VALUES ' \
-        #               '(seq_spider_disease_id.nextval, :name, :url, :flag)'
-        #     params= {}
-        #     params['name'] = d_name
-        #     params['url'] = ''
-        #     params['flag'] = '0'
-        #     f.execute_sql(str_sql, params)
-        # 2. 批量导入
-        f.execute_sql_many(sql, param_dict)
+        with helper.OracleHelper() as f:
+            # 1. 每次导入一行
+            cou = f.execute_query(pre_sql, pre_param)
+            d_cou = cou.fetchone()[0]
+            print('%s 数量: %s' % (d_name, d_cou))
+            if d_cou <= 0:
+                f.execute_sql(sql, data_param)
+            # 2. 批量导入
+            # f.execute_sql_many(sql, param_dict)
+
+
+def insert_disease_list():
+
+    pass
 
 
 if __name__ == '__main__':
