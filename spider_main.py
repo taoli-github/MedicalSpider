@@ -67,7 +67,7 @@ def html_spider():
 def get_disease_list():
     sql = 'select id,disease_name,sipider_url ' \
           'from spider_disease_list ' \
-          'where flag_done = 0 order by id '
+          'where flag_done = 0 and flag_invalid = 0 order by id '
     with helper.OracleHelper() as f:
         disease_list = f.execute_query(sql)
 
