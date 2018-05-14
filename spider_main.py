@@ -40,15 +40,15 @@ def html_spider():
             with request.urlopen(req, timeout=5) as f:
                 html_code = f.read().decode('utf-8')
 
-            html = etree.HTML(html_code)
-            result = etree.tostring(html)
-            div_path = html.xpath('//div')
+            htmlc = etree.HTML(html_code)
+            result = etree.tostring(htmlc)
+            div_path = htmlc.xpath('//div')
             if len(div_path) == 0:
                 print('无疾病百科')
                 update_flag_wiki(d_id)
                 continue
 
-            params = {'d_id':d_id, 'code':result.decode('utf-8'), 'flag_invalid':'0'}
+            params = {'d_id':d_id, 'code': result.decode('utf-8'), 'flag_invalid':'0'}
             update_param = {'id': d_id}
             with helper.OracleHelper() as oh:
                 oh.execute_sql(code_sql, params)

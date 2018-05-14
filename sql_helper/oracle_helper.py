@@ -25,6 +25,7 @@ class OracleHelper:
             else:
                 result = self.__cursor.execute(sql, params)
         except cx_Oracle.DatabaseError as err:
+            print(sql, params)
             raise err
         return result
 

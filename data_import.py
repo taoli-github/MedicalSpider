@@ -2,8 +2,6 @@
 
 import csv
 import sql_helper.oracle_helper as helper
-import logging
-import urllib.request as req
 
 
 disease_dict = []
