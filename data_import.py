@@ -8,6 +8,7 @@ disease_dict = []
 
 
 def main():
+    """ 从csv导入疾病列表 """
     with open('./csv_file/disease_list.csv') as f:
         dic = csv.DictReader(f)
         global disease_dict
