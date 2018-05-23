@@ -19,7 +19,7 @@ def main():
 def html_spider():
 
     code_sql = 'insert into spider_source_code ' \
-               'values (seq_spider_code_id.nextval, :d_id, :code, :flag_invalid) '
+               'values (seq_spider_code_id.nextval, :d_id, :code, :flag_invalid, 0, 0) '
     update_sql = 'update spider_disease_list set flag_done = 1 where id = :id '
 
     count = 0
@@ -34,7 +34,11 @@ def html_spider():
         print('正在解析url:%s, id:%s, name:%s' % (d_url, d_id, d_name))
 
         html_code = ''
-        req = request.Request('http://brain.kangfuzi.com/jibing/' + request.quote(d_name))
+
+        req_url = 'http://brain.kangfuzi.com/jibing/' + request.quote(d_name)
+        req = request.Request(req_url)
+        print(req_url)
+
         req.add_header('User-Agent', USER_AGENT_PC)
         try:
             with request.urlopen(req, timeout=5) as f:
@@ -48,7 +52,7 @@ def html_spider():
                 update_flag_wiki(d_id)
                 continue
 
-            params = {'d_id':d_id, 'code': result.decode('utf-8'), 'flag_invalid':'0'}
+            params = {'d_id': d_id, 'code': result.decode('utf-8'), 'flag_invalid': '0'}
             update_param = {'id': d_id}
             with helper.OracleHelper() as oh:
                 oh.execute_sql(code_sql, params)
@@ -58,7 +62,7 @@ def html_spider():
             # raise e
             continue
 
-        time.sleep(random.randint(0,10) * 2)
+        time.sleep(random.randint(0, 10) * 2)
         count = count + 1
         print('解析完成url:%s, name:%s' % (d_url, d_name))
         print('&&&&&&&&&&&&&&&&&&==================&&&&&&&&&&&&&&&&&&&&')

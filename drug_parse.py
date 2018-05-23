@@ -76,8 +76,8 @@ def drug_import(drug_list):
             res = oh.execute_query(drug_pre_sql, {'drug_name': drug_name})
             row_num = res.fetchone()
             print('是否存在:%s' % row_num)
-            if row_num[0] != 0:
-                print('已存在此药，dis_id:%s,drug_name:%s,drug_id:%s'% (disease_id, drug_name, row_num[0]))
+            if row_num is not None:
+                print('%s已存在此药，dis_id:%s,drug_name:%s,drug_id:' % (disease_id, drug_name, row_num[0]))
                 oh.execute_sql(disease_vs_drug_sql, {'dis_id': disease_id, 'drug_id': row_num[0]})
             else:
                 print('简介:', drug_brief)
@@ -89,7 +89,7 @@ def drug_import(drug_list):
 
 
 def code_replace(string):
-    return string.replace(u'\xa0 ', u' ').replace('\xa0',' ').replace('\ue006','').replace(u'\ue006',u'').replace('\ue003','').replace(u'\ue003',u'').replace('\ue001','').replace(u'\ue001',u'').replace('\ue456','').replace(u'\ue456',u'').replace('\ue000','').replace(u'\ue000',u'').replace('\ue005','').replace(u'\ue005',u'')
+    return string.replace(u'\xa0 ', u' ').replace('\xa0', ' ').replace('\ue006','').replace(u'\ue006', u'').replace('\ue003','').replace(u'\ue003',u'').replace('\ue001','').replace(u'\ue001',u'').replace('\ue456','').replace(u'\ue456',u'').replace('\ue000','').replace(u'\ue000',u'').replace('\ue005','').replace(u'\ue005',u'')
 
 
 drug_list_sql = 'select id, drug_name from spider_drug_list where flag_done = 0 and flag_invalid= 0 order by id'
@@ -145,3 +145,4 @@ def get_drug_list():
 
 if __name__ == '__main__':
     drug_main()
+    # main()
