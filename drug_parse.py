@@ -16,8 +16,7 @@ def main():
 def get_disease_code():
     """ get html source code """
     code_sql = ''' select DISEASE_ID, SOURCE_CODE
-                from spider_source_code 
-                 WHERE FLAG_INVALID = 0 AND flag_drug = 0 
+                from spider_source_code where id > 2000
                  order by id '''
 
     list_r = []
@@ -25,7 +24,11 @@ def get_disease_code():
         result = oh.execute_query(code_sql)
 
         for r in result.fetchall():
-            list_r.append([r[0], r[1].read().encode('utf-8')])
+            print(r[0], type(r[1].read()))
+            if r[0] == 7140:
+                continue
+
+            list_r.append([r[0], r[1].read().encode('utf8')])
 
     return list_r
 
@@ -51,7 +54,7 @@ def disease_parser(res):
         print('==========')
     # print(drug_list)
     print(count)
-    drug_import(drug_list)
+    # drug_import(drug_list)
 
 
 drug_pre_sql = 'select id from spider_drug_list ' \
@@ -89,7 +92,7 @@ def drug_import(drug_list):
 
 
 def code_replace(string):
-    return string.replace(u'\xa0 ', u' ').replace('\xa0', ' ').replace('\ue006','').replace(u'\ue006', u'').replace('\ue003','').replace(u'\ue003',u'').replace('\ue001','').replace(u'\ue001',u'').replace('\ue456','').replace(u'\ue456',u'').replace('\ue000','').replace(u'\ue000',u'').replace('\ue005','').replace(u'\ue005',u'')
+    return string.replace(u'\xa0 ', u' ').replace('\xa0', ' ').replace('\ue006','').replace(u'\ue006', u'').replace('\ue003','').replace(u'\ue003',u'').replace('\ue001','').replace(u'\ue001',u'').replace('\ue456','').replace(u'\ue456',u'').replace('\ue000','').replace(u'\ue000',u'').replace('\ue005','').replace(u'\ue005', u'').replace('0xaa', '')
 
 
 drug_list_sql = 'select id, drug_name from spider_drug_list where flag_done = 0 and flag_invalid= 0 order by id'
@@ -144,5 +147,5 @@ def get_drug_list():
 
 
 if __name__ == '__main__':
-    drug_main()
-    # main()
+    # drug_main()
+    main()
